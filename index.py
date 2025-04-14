@@ -42,7 +42,7 @@ def responder(message):
         bot.reply_to(message, "Hmmm... Que tal me dar aquele carinho de novo? 💋 Digite /pix")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    app.run(host="0.0.0.0", port=8443)
 
 @bot.message_handler(commands=['id'])
 def id(message):
