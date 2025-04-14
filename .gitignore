@@ -1,0 +1,9 @@
+# Ignorar arquivos sensíveis
+.env
+
+# Ignorar arquivos Python temporários
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env.*
