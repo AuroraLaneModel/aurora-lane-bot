@@ -13,11 +13,14 @@ usuarios = {}
 @app.route("/pagamento", methods=["POST"])
 def pagamento():
     data = request.json
-    chat_id = data.get("external_reference")
-    if chat_id:
-        usuarios[chat_id] = 4
+    chat_id = str(data.get("external_reference"))
+if chat_id:
+    usuarios[chat_id] = 4
+    try:
         bot.send_message(chat_id, "Aah... Agora sim... Prepare-se 😈")
-    return "ok"
+    except Exception as e:
+        print(f"Erro ao enviar mensagem para {chat_id}: {e}")
+return "ok"
 
 @bot.message_handler(commands=['pix'])
 def pix(message):
