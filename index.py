@@ -10,17 +10,17 @@ app = Flask(__name__)
 
 usuarios = {}
 
-@app.route("/pagamento", methods=["POST"])
+@app.route("/pagamento", methods=["POST", "GET"])
 def pagamento():
     data = request.json
     chat_id = str(data.get("external_reference"))
-if chat_id:
-    usuarios[chat_id] = 4
-    try:
-        bot.send_message(chat_id, "Aah... Agora sim... Prepare-se 😈")
-    except Exception as e:
-        print(f"Erro ao enviar mensagem para {chat_id}: {e}")
-return "ok"
+    if chat_id:
+        usuarios[chat_id] = 4
+        try:
+            bot.send_message(chat_id, "Aah... Agora sim... Prepare-se 😈")
+        except Exception as e:
+            print(f"Erro ao enviar mensagem para {chat_id}: {e}")
+    return "ok"
 
 @bot.message_handler(commands=['pix'])
 def pix(message):
