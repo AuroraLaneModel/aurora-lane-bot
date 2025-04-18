@@ -21,15 +21,17 @@ def pagamento():
             print(f"Erro ao enviar mensagem para {chat_id}: {e}")
     return "ok"
 
+# 🔥 ROTA PRINCIPAL DO TELEGRAM WEBHOOK
 @app.route("/", methods=["POST"])
 def webhook():
     if request.headers.get('content-type') == 'application/json':
-        json_string = request.get_data().decode('utf-8')
+        json_string = request.get_data().decode("utf-8")
         update = telebot.types.Update.de_json(json_string)
         bot.process_new_updates([update])
         return "ok"
-    return "unsupported request"
+    return "invalid request"
 
+# 🔥 COMANDO /pix
 @bot.message_handler(commands=['pix'])
 def pix(message):
     texto = (
@@ -41,6 +43,7 @@ def pix(message):
     )
     bot.send_message(message.chat.id, texto, parse_mode='Markdown')
 
+# 🔥 COMANDO /id
 @bot.message_handler(commands=['id'])
 def id(message):
     chat_id = message.chat.id
@@ -51,6 +54,7 @@ def id(message):
     )
     bot.reply_to(message, texto)
 
+# 🔥 RESPOSTAS AUTOMÁTICAS
 @bot.message_handler(func=lambda msg: True)
 def responder(message):
     chat_id = str(message.chat.id)
@@ -62,5 +66,6 @@ def responder(message):
     else:
         bot.reply_to(message, "Hmmm... Que tal me dar aquele carinho de novo? 💋 Digite /pix")
 
+# 🔥 EXECUÇÃO FLASK COM WEBHOOK
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
