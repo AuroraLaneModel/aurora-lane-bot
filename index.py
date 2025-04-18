@@ -7,7 +7,6 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 bot = telebot.TeleBot(BOT_TOKEN)
 
 app = Flask(__name__)
-
 usuarios = {}
 
 @app.route("/pagamento", methods=["POST", "GET"])
@@ -22,6 +21,15 @@ def pagamento():
             print(f"Erro ao enviar mensagem para {chat_id}: {e}")
     return "ok"
 
+@app.route("/", methods=["POST"])
+def webhook():
+    if request.headers.get('content-type') == 'application/json':
+        json_string = request.get_data().decode('utf-8')
+        update = telebot.types.Update.de_json(json_string)
+        bot.process_new_updates([update])
+        return "ok"
+    return "unsupported request"
+
 @bot.message_handler(commands=['pix'])
 def pix(message):
     texto = (
@@ -32,6 +40,16 @@ def pix(message):
         "Se for generoso o bastante… eu vou me entregar só pra você... do jeitinho que mais gosta 😍"
     )
     bot.send_message(message.chat.id, texto, parse_mode='Markdown')
+
+@bot.message_handler(commands=['id'])
+def id(message):
+    chat_id = message.chat.id
+    texto = (
+        f"Opa! Esse é o seu ID exclusivo:\n\n"
+        f"{chat_id}\n\n"
+        "Guarda ele! Vou precisar dele pra te reconhecer depois que você me der um presentinho... 😈"
+    )
+    bot.reply_to(message, texto)
 
 @bot.message_handler(func=lambda msg: True)
 def responder(message):
@@ -46,13 +64,3 @@ def responder(message):
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
-
-@bot.message_handler(commands=['id'])
-def id(message):
-    chat_id = message.chat.id
-    texto = (
-        f"Opa! Esse é o seu ID exclusivo:\n\n"
-        f"{chat_id}\n\n"
-        "Guarda ele! Vou precisar dele pra te reconhecer depois que você me der um presentinho... 😈"
-    )
-    bot.reply_to(message, texto)
