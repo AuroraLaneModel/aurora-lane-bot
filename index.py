@@ -132,7 +132,9 @@ def responder(message):
         if any(p in texto_cliente for p in palavras_pix):
             bot.send_message(chat_id, choice(frases_pix), parse_mode='Markdown')
         else:
-            bot.send_message(chat_id, choice(frases_sensuais))
+            with open("frases.txt", "r", encoding="utf-8") as f:
+                frases = f.readlines()
+            bot.send_message(chat_id, choice(frases).strip())
 
 # 🔥 EXECUÇÃO FLASK COM WEBHOOK
 if __name__ == "__main__":
