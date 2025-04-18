@@ -128,7 +128,7 @@ def responder(message):
         # bot.send_photo(chat_id, open("imagens/1.jpg", "rb"))
 
     else:
-        palavras_pix = ["foto", "me mostra", "vc é real", "nua", "gostosa", "mostra", "mais", "manda", "imagem", "me manda"]
+        palavras_pix = ["foto", "me mostra", "vc é real", "nua", "gostosa", "mo>
         if any(p in texto_cliente for p in palavras_pix):
             bot.send_message(chat_id, choice(frases_pix), parse_mode='Markdown')
         else:
