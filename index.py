@@ -102,14 +102,6 @@ def responder(message):
         "Tá com vontade? Me mostra primeiro... 💋\n\n[Me mimar agora 😈](https://auroralane.carrinho.app/one-checkout/ocmtb/25167723)"
     ]
 
-    frases_sensuais = [
-        "Uuh… só de você falar assim já fico maluca 😈",
-        "Adoro quando me provoca desse jeito...",
-        "Sabe que eu não resisto quando você fala assim, né?",
-        "Hmm... será que você aguenta me ver do jeitinho que eu tô agora?",
-        "Eu ficaria ainda mais animada se você me mostrasse o quanto tá com vontade 💋"
-    ]
-
     if usuarios.get(chat_id, 0) > 0:
         usuarios[chat_id] -= 1
 
@@ -125,16 +117,16 @@ def responder(message):
             resposta = choice(frases).strip()
 
         bot.send_message(chat_id, resposta)
-        # bot.send_photo(chat_id, open("imagens/1.jpg", "rb"))
 
     else:
-        palavras_pix = ["foto", "me mostra", "vc é real", "nua", "gostosa", "mo>
+        palavras_pix = ["foto", "me mostra", "vc é real", "nua", "gostosa", "mostra", "mais", "manda", "imagem", "me manda"]
         if any(p in texto_cliente for p in palavras_pix):
             bot.send_message(chat_id, choice(frases_pix), parse_mode='Markdown')
         else:
             with open("frases.txt", "r", encoding="utf-8") as f:
                 frases = f.readlines()
-            bot.send_message(chat_id, choice(frases).strip())
+            resposta = choice(frases).strip()
+            bot.send_message(chat_id, resposta)
 
 # 🔥 EXECUÇÃO FLASK COM WEBHOOK
 if __name__ == "__main__":
