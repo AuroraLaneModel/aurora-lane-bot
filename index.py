@@ -4,7 +4,7 @@ load_dotenv()
 
 from flask import Flask, request
 import telebot
-from random import choice
+from random import choice, shuffle
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 bot = telebot.TeleBot(BOT_TOKEN)
@@ -25,7 +25,6 @@ def pagamento():
             print(f"Erro ao enviar mensagem para {chat_id}: {e}")
     return "ok"
 
-# 🔥 ROTA PRINCIPAL DO TELEGRAM WEBHOOK
 @app.route("/", methods=["POST"])
 def webhook():
     if request.headers.get('content-type') == 'application/json':
@@ -35,7 +34,6 @@ def webhook():
         return "ok"
     return "invalid request"
 
-# 🔥 COMANDO /pix
 @bot.message_handler(commands=['pix'])
 def pix(message):
     texto = (
@@ -47,7 +45,6 @@ def pix(message):
     )
     bot.send_message(message.chat.id, texto, parse_mode='Markdown')
 
-# 🔥 COMANDO /id
 @bot.message_handler(commands=['id'])
 def id(message):
     chat_id = message.chat.id
@@ -58,7 +55,6 @@ def id(message):
     )
     bot.reply_to(message, texto)
 
-# 🔥 RESPOSTAS AUTOMÁTICAS COM IA SIMULADA
 @bot.message_handler(func=lambda msg: True)
 def responder(message):
     chat_id = str(message.chat.id)
@@ -77,6 +73,7 @@ def responder(message):
     saudacoes = ["oi", "e aí", "ola", "olá", "tá aí", "ta ai", "hey", "bom dia", "boa noite", "boa tarde"]
     despedidas = ["tchau", "vlw", "valeu", "até mais", "fui", "até", "até logo"]
     palavras_oco = ["kk", "rs", "?", "!", "...", "kkk", "ok", "okey"]
+    palavras_pix = ["foto", "me mostra", "vc é real", "nua", "gostosa", "mostra", "mais", "manda", "imagem", "me manda"]
 
     frases_oi = [
         "Uuh… oi você 😘 já tava com saudade ou tá só curioso pra me ver de novo?",
@@ -102,32 +99,31 @@ def responder(message):
         "Tá com vontade? Me mostra primeiro... 💋\n\n[Me mimar agora 😈](https://auroralane.carrinho.app/one-checkout/ocmtb/25167723)"
     ]
 
+    try:
+        with open("frases.txt", "r", encoding="utf-8") as f:
+            frases_txt = [linha.strip() for linha in f if linha.strip()]
+        shuffle(frases_txt)
+    except:
+        frases_txt = ["Tô te esperando aqui... 😘"]
+
     if usuarios.get(chat_id, 0) > 0:
         usuarios[chat_id] -= 1
-
+        resposta = frases_txt[0]
+        bot.send_message(chat_id, resposta + "\n(Imagem gerada automaticamente aqui)")
+    else:
         if texto_cliente in saudacoes:
             resposta = choice(frases_oi)
         elif texto_cliente in despedidas:
             resposta = choice(frases_tchau)
         elif texto_cliente in palavras_oco:
             resposta = choice(frases_oco)
+        elif any(p in texto_cliente for p in palavras_pix):
+            resposta = choice(frases_pix)
         else:
-            with open("frases.txt", "r", encoding="utf-8") as f:
-                frases = f.readlines()
-            resposta = choice(frases).strip()
+            resposta = choice(frases_txt)
 
-        bot.send_message(chat_id, resposta)
+        bot.send_message(chat_id, resposta, parse_mode='Markdown')
 
-    else:
-        palavras_pix = ["foto", "me mostra", "vc é real", "nua", "gostosa", "mostra", "mais", "manda", "imagem", "me manda"]
-        if any(p in texto_cliente for p in palavras_pix):
-            bot.send_message(chat_id, choice(frases_pix), parse_mode='Markdown')
-        else:
-            with open("frases.txt", "r", encoding="utf-8") as f:
-                frases = f.readlines()
-            resposta = choice(frases).strip()
-            bot.send_message(chat_id, resposta)
-
-# 🔥 EXECUÇÃO FLASK COM WEBHOOK
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
