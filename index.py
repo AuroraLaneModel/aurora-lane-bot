@@ -59,10 +59,17 @@ def id(message):
 @bot.message_handler(commands=['reset'])
 def resetar_usuario(message):
     chat_id = message.chat.id
+    print(f"[DEBUG] Comando /reset chamado por ID: {chat_id}")
+
+    if str(chat_id) not in usuarios:
+        print("[DEBUG] ID ainda não tem histórico no dicionário.")
+
     if chat_id == 6858748030:
         usuarios[str(chat_id)] = 4
+        print("[DEBUG] Reset feito com sucesso.")
         bot.reply_to(message, "Aah... Agora sim... Me provoca que eu me mostro todinha pra você 😈")
     else:
+        print("[DEBUG] ID não autorizado para reset.")
         bot.reply_to(message, "Hmm... esse comando é só pra quem tem acesso exclusivo ao meu coração 💋")
 
 @bot.message_handler(func=lambda msg: True)
