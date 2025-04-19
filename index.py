@@ -55,6 +55,16 @@ def id(message):
     )
     bot.reply_to(message, texto)
 
+# 🔐 COMANDO SECRETO /reset (somente para o dono)
+@bot.message_handler(commands=['reset'])
+def resetar_usuario(message):
+    chat_id = str(message.chat.id)
+    if chat_id == "7519500382":
+        usuarios[chat_id] = 4
+        bot.reply_to(message, "Aah... Agora sim... Me provoca que eu me mostro todinha pra você 😈")
+    else:
+        bot.reply_to(message, "Hmm... esse comando é só pra quem tem acesso exclusivo ao meu coração 💋")
+
 @bot.message_handler(func=lambda msg: True)
 def responder(message):
     chat_id = str(message.chat.id)
@@ -124,6 +134,6 @@ def responder(message):
 
         bot.send_message(chat_id, resposta, parse_mode='Markdown')
 
+# 🔥 EXECUÇÃO FLASK COM WEBHOOK
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
-
