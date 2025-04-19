@@ -58,9 +58,9 @@ def id(message):
 # 🔐 COMANDO SECRETO /reset (somente para o dono)
 @bot.message_handler(commands=['reset'])
 def resetar_usuario(message):
-    chat_id = str(message.chat.id)
-    if chat_id == "6858748030":
-        usuarios[chat_id] = 4
+    chat_id = message.chat.id
+    if chat_id == 6858748030:
+        usuarios[str(chat_id)] = 4
         bot.reply_to(message, "Aah... Agora sim... Me provoca que eu me mostro todinha pra você 😈")
     else:
         bot.reply_to(message, "Hmm... esse comando é só pra quem tem acesso exclusivo ao meu coração 💋")
